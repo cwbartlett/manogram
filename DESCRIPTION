@@ -1,0 +1,26 @@
+Package: imgplot
+Title: What the Package Does (one line, Title Case)
+Version: 0.0.0.9000
+Authors@R: c(
+    person("First", "Last", email = "firstlast@example.com", role = c("aut", "cre")),
+    person("First2", "Last2", email = "firstlast2@example.com", role = "ctb")
+  )
+Description: What the package does (a couple sentences, one paragraph).
+URL: http://example.com/your-webpage
+License: MIT + file LICENSE
+LazyData: TRUE
+Depends: 
+    R (>= 2.10.0),
+    ggplot2
+Imports:
+    gridExtra,
+    gtable,
+    magrittr,
+    png,
+    zoo
+Suggests:
+    testthat,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+RoxygenNote: 6.0.1

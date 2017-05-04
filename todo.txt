@@ -1,0 +1,3 @@
+
+- same size image canvas and figure aligned to center bottom of canvas
+- 
