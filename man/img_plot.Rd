@@ -4,59 +4,158 @@
 \alias{img_plot}
 \title{Image Plot}
 \usage{
-img_plot(main_plot, breaks = 11, labels = 0:10, img_type, n_img = NULL,
-  img_positions = "uniform", peaks_adjust = 0, img_range = NULL,
-  img_height = NULL, panel = TRUE)
+img_plot(main_plot, y_breaks = 11, y_labels = 0:10, img_type,
+  n_img = NULL, img_positions = "uniform", peaks_adjust = 0,
+  img_range = NULL, img_height = NULL)
 }
 \arguments{
-\item{main_plot}{The main plot as a ggplot object. It must contain a smoothing function as returned by geom_smooth() or stat_smooth().}
+\item{main_plot}{The main scatterplot as a ggplot object. It must contain a
+smoothing function as returned by geom_smooth() or stat_smooth().}
 
-\item{breaks}{Either a numeric vector of two or more unique cut points or a single number (greater than or equal to 2) giving the number of intervals into which y axis is to be cut. This will create the intervals which the images will be defined across.}
+\item{y_breaks}{Either a numeric vector of two or more unique cut points
+(points along the y-axis) or a single number (greater than or equal to 2)
+giving the number of intervals into which the y axis is to be cut (providing
+a uniform number of cuts along the y axis). This will create the intervals
+which the images will be defined across.}
 
-\item{labels}{The image levels of the resulting breaks intervals. Needs to be an integer vector with values 0 - 10 generally specifying lowest to highest (strength, hydration, etc).}
+\item{y_labels}{The image levels of the resulting y_breaks intervals. The
+number of y_labels must be the same as the number of y_breaks. Currently
+the maximum number of breaks and labels is 11, so 'y_labels = 0:10' is
+suggested with `y_breaks = 11`.}
 
-\item{img_type}{The type of image plot you need. A character string of either "strength", "hydration"}
+\item{img_type}{The type of image plot you need. A character string of
+either "strength" or "hydration".}
 
-\item{n_img}{An integer of the number of images you want below the x-axis. Defaults to length(x-axis) / 20.}
+\item{n_img}{An integer of the number of images you want below the x-axis.
+Defaults to length(x-axis) / 20. Ignored if supplying a numeric vector
+for `img_positions`.}
 
-\item{img_positions}{Defines the image placement under the x-axis. A character string of either "uniform", "peaks", or a user supplied integer vector of x-axis indices. Defaults to "uniform".}
+\item{img_positions}{Defines the image placement under the x-axis. A
+character string of either "uniform", "peaks", or a user supplied integer
+vector of x-axis indices. Defaults to "uniform".}
 
-\item{peaks_adjust}{An integer to adjust the window width for the argument setting: img_positions = "peaks". Positive values increase the window width (less sensitive to local minima and maxima). Negative values decrease the window width (more sensitive to local minima and maxima).}
+\item{peaks_adjust}{An integer to adjust the window width for the argument
+setting: img_positions = "peaks". Positive values increase the window width
+(less sensitive to local minima and maxima). Negative values decrease the
+window width (more sensitive to local minima and maxima).}
 
-\item{img_range}{An integer to adjust the range of values that are used to calculate the mean y-value and it's corresponding image (based on the fitted smooth curve). For example, the "uniform" img_positions method defaults to using all y-values in each y_interval, the "peaks" img_positions method defaults to a range of 0, and supplying your own img_positions values will default to a range of 5.}
+\item{img_range}{An integer to adjust the range of values that are used to
+calculate the mean y-value and it's corresponding image (based on the fitted
+smooth curve). For example, the "uniform" img_positions method defaults to
+using all y-values in each y_interval, the "peaks" img_positions method
+defaults to a range of 0, and supplying your own img_positions values will
+default to a range of 5.}
 
-\item{img_height}{An integer setting the number of rows (height) for the image plots. "strength" defaults to 1 and "hydration" defaults to 2.}
-
-\item{panel}{\code{TRUE} or \code{FALSE}: flag to keep or remove the main plot panel. If removed you will only see the image plots and x-axis. The default value is TRUE.}
+\item{img_height}{An integer setting the number of rows (height) for the
+image plots. Defaults is 2.}
 }
 \value{
 Returns an image plot grob as a ggplot2 grob object.
 }
 \description{
-This function will create an image plot.
+Create a scatterplot with biologically relevant glyphs.
 }
 \examples{
 \dontrun{
 #----------------------------------------------------------------------------
 # img_plot example
 #----------------------------------------------------------------------------
-n <- 100
+library(imgplot)
+
+#-------------------------------------------------------------------------------
+# Create example data.
+#-------------------------------------------------------------------------------
+set.seed(1)
+n <- 80
+x1 = sample(LETTERS[c(1, 3, 7, 20)], size = n, replace = TRUE)
+x2 = sample(LETTERS[c(1, 3, 7, 20)], size = n, replace = TRUE)
+y <- sin(2 * pi * seq_along(x1) / n) + runif(length(x1), -1, 1)
 data <- data.frame(
-  x1 = sample(LETTERS[c(1, 3, 7, 20)], size = n, replace = TRUE),
-  x2 = sample(LETTERS[c(1, 3, 7, 20)], size = n, replace = TRUE),
-  y = sort(rnorm(n)),
+  a = x1,
+  c = x2,
+  b = y,
   stringsAsFactors = FALSE
 )
-
-main_plot <- ggplot(data, aes(1:length(x1), y)) +
-  geom_line() +
+main_plot <- ggplot(data, aes(1:length(x1), b)) +
+  geom_point() +
+  theme_bw() +
+  geom_smooth(method = "loess", span = 0.7) +
   scale_x_continuous(
     name = "Pairwise Sequence Alignment",
-    breaks = 1:length(data$x1),
-    labels = paste0(data$x1, "\\n", data$x2)
+    breaks = 1:length(data$a),
+    labels = paste0(data$a, "\\n", data$c)
   )
+main_plot
 
-img_type <- "strength"
+#-------------------------------------------------------------------------------
+# Uniform - Strength
+#-------------------------------------------------------------------------------
+plot <- img_plot(
+  main_plot = main_plot,
+  y_breaks = 11,
+  y_labels = 0:10,
+  img_type = "strength",
+  n_img = 9,
+  img_positions = "uniform"
+)
+
+#-------------------------------------------------------------------------------
+# Peaks - Strength
+#-------------------------------------------------------------------------------
+plot <- img_plot(
+  main_plot = main_plot,
+  y_breaks = 11,
+  y_labels = 0:10,
+  img_type = "strength",
+  n_img = 9,
+  img_positions = "peaks"
+)
+
+#-------------------------------------------------------------------------------
+# Manual positioning - Strength
+#-------------------------------------------------------------------------------
+plot <- img_plot(
+  main_plot = main_plot,
+  y_breaks = 11,
+  y_labels = 0:10,
+  img_type = "strength",
+  img_positions = c(20, 60)
+)
+
+#-------------------------------------------------------------------------------
+# Uniform - Hydration
+#-------------------------------------------------------------------------------
+plot <- img_plot(
+  main_plot = main_plot,
+  y_breaks = 11,
+  y_labels = 0:10,
+  img_type = "hydration",
+  n_img = 9,
+  img_positions = "uniform",
+)
+
+#-------------------------------------------------------------------------------
+# Peaks - Hydration
+#-------------------------------------------------------------------------------
+plot <- img_plot(
+  main_plot = main_plot,
+  y_breaks = 11,
+  y_labels = 0:10,
+  img_type = "hydration",
+  n_img = 9,
+  img_positions = "peaks"
+)
+
+#-------------------------------------------------------------------------------
+# Manual positioning - Hydration
+#-------------------------------------------------------------------------------
+plot <- img_plot(
+  main_plot = main_plot,
+  y_breaks = 11,
+  y_labels = 0:10,
+  img_type = "hydration",
+  img_positions = c(20, 60)
+)
 }
 
 }

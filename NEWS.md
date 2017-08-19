@@ -1,3 +1,3 @@
-# emptypkg 0.0.0.9000 (YYYY-MM-DD)
+# imgplot 0.1 (2017-08-18)
 
-- Working towards initial release.
+- Working prototype.

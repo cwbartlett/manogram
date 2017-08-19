@@ -1,16 +1,16 @@
 Package: imgplot
-Title: What the Package Does (one line, Title Case)
-Version: 0.0.0.9000
+Title: Plot with Culturally Meaningful Glyphs
+Version: 0.1
 Authors@R: c(
-    person("First", "Last", email = "firstlast@example.com", role = c("aut", "cre")),
-    person("First2", "Last2", email = "firstlast2@example.com", role = "ctb")
+    person("Brett", "Klamer", email = "code@brettklamer.com", role = "cre"),
+    person("Christopher", "Bartlett", email = "Christopher.Bartlett@nationwidechildrens.org", role = "aut")
   )
-Description: What the package does (a couple sentences, one paragraph).
-URL: http://example.com/your-webpage
+Description: Produces scatterplots with culturally meaningful glyphs. It offers hydration and strength images that can aide in the interpretation of biological based scatterplots.
+URL: https://github.com/cwbartlett/manogram
 License: MIT + file LICENSE
 LazyData: TRUE
 Depends: 
-    R (>= 2.10.0),
+    R (>= 3.1.0),
     ggplot2
 Imports:
     gridExtra,
@@ -18,9 +18,4 @@ Imports:
     magrittr,
     png,
     zoo
-Suggests:
-    testthat,
-    knitr,
-    rmarkdown
-VignetteBuilder: knitr
 RoxygenNote: 6.0.1
