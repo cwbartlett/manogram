@@ -2,8 +2,12 @@
 # function is dependent on factors preserving ordering to get the results we need
 # from the cut() function.
 # x - A numeric vector which is to be converted to a factor by cut().
-# breaks - Either a numeric vector of two or more unique cut points or a single number (greater than or equal to 2) giving the number of intervals into which x is to be cut.
-# labels - Labels for the levels of the images. Labels need to be integers 0 - 10, generally specifying lowest to highest values (strength, hydration, etc).
+# breaks - Either a numeric vector of two or more unique cut points or a single
+#          number (greater than or equal to 2) giving the number of intervals
+#          into which x is to be cut.
+# labels - Labels for the levels of the images. Labels need to be integers
+#          0 - 10, generally specifying lowest to highest values (strength,
+#          hydration, etc).
 y_cut <- function(x, breaks, labels) {
   if(!all(labels %in% 0:10)) {
     stop("Check the labels argument. The labels need to be integers between 0 and 10.")
@@ -18,8 +22,8 @@ y_cut <- function(x, breaks, labels) {
   )
 }
 
-# utility function to calculate the the lower and upper values for each img
-# position on the x-axis
+# Utility function to calculate the the lower and upper values for each img
+# position on the x-axis.
 x_pos <- function(img_positions) {
   if(is.factor(img_positions)) { # if feeding in values from cut() function
     x_index_lower <- as.numeric(sub("\\((.+),.*", "\\1", levels(img_positions))) + 0.1
@@ -34,8 +38,8 @@ x_pos <- function(img_positions) {
   )
 }
 
-# helper function to adjust the ranges of values used to calculate the average
-# image level
+# Utility function to adjust the ranges of values used to calculate the average
+# image level.
 x_pos_adjusted <- function(x_range, img_range) {
   x_index_lower <- round(apply(x_range, 1, function(x) {median(x)}) - img_range) - 0.1
   x_index_upper <- round(apply(x_range, 1, function(x) {median(x)}) + img_range)
@@ -45,7 +49,7 @@ x_pos_adjusted <- function(x_range, img_range) {
   )
 }
 
-# helper function to create image plot
+# Utility function to create image plot.
 create_img_plot <- function(main_plot, img_grobs, img_levels, x_range) {
   data <- data.frame(
     x = with(main_plot$data, eval(main_plot$mapping[["x"]])),
